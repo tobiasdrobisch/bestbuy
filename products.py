@@ -1,7 +1,7 @@
 class Product:
     """Represents a product with a name, price, quantity, and active status."""
 
-    def __init__(self, name, price, quantity):
+    def __init__(self, name: str, price: float, quantity: int):
         """
         Initialize a Product instance.
 
@@ -9,112 +9,72 @@ class Product:
             name (str): The name of the product.
             price (float): The price of the product (must be >= 0).
             quantity (int): The available quantity (must be >= 0).
-
-        Raises:
-            ValueError: If name is empty, or price/quantity are negative.
         """
-        if name == "":
-            raise ValueError("Sorry, name of product missing")
-        elif price < 0:
-            raise ValueError("Sorry, negative price is not possible.")
-        elif quantity < 0:
-            raise ValueError("Sorry, negative quantity is not possible")
+        if not name:
+            raise ValueError("Product name cannot be empty.")
+        if price < 0:
+            raise ValueError("Price cannot be negative.")
+        if quantity < 0:
+            raise ValueError("Quantity cannot be negative.")
 
-        self.active = True
         self.name = name
         self.price = price
         self.quantity = quantity
+        self.active = True
 
     def get_quantity(self) -> int:
-        """
-        Returns:
-            int: The current quantity of the product.
-        """
+        """Return the current quantity of the product."""
         return self.quantity
 
-    def set_quantity(self, quantity):
+    def set_quantity(self, quantity: int):
         """
-        Updates the product's quantity.
+        Set a new quantity for the product.
 
         Args:
-            quantity (int): The new quantity value (must be >= 0).
-
-        Raises:
-            ValueError: If quantity is negative.
+            quantity (int): New quantity (must be >= 0).
         """
         if quantity < 0:
             raise ValueError("Quantity cannot be negative.")
         self.quantity = quantity
 
     def is_active(self) -> bool:
-        """
-        Checks if the product is active.
-
-        Returns:
-            bool: True if active, False otherwise.
-        """
+        """Return True if the product is active."""
         return self.active
 
     def activate(self):
-        """
-        Sets the product status to active.
-        """
+        """Activate the product."""
         self.active = True
 
     def deactivate(self):
-        """
-        Sets the product status to inactive.
-        """
+        """Deactivate the product."""
         self.active = False
 
     def show(self):
-        """
-        Prints a string that represents the product.
-        Format: "<name>, Price: <price>, Quantity: <quantity>"
-        """
+        """Print product details."""
         print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
 
-    def buy(self, quantity) -> float:
+    def buy(self, quantity: int) -> float:
         """
-        Processes a purchase of the product.
-
-        Decreases the quantity accordingly and deactivates the product
-        if the quantity reaches zero.
+        Process a purchase.
 
         Args:
-            quantity (int): The quantity to purchase (must be > 0).
+            quantity (int): Quantity to purchase.
 
         Returns:
-            float: The total cost of the purchase.
+            float: Total price.
 
         Raises:
-            ValueError: If quantity is not positive or not enough in stock.
+            ValueError: If not enough stock or invalid quantity.
         """
         if quantity <= 0:
-            raise ValueError("Quantity to buy must be greater than zero.")
+            raise ValueError("Quantity must be greater than zero.")
 
-        quantity_in_stock = self.get_quantity()
-        if quantity_in_stock >= quantity:
-            quantity_in_stock -= quantity
-            self.set_quantity(quantity_in_stock)
-            if quantity_in_stock == 0:
+        if self.quantity >= quantity:
+            self.quantity -= quantity
+            if self.quantity == 0:
                 self.deactivate()
-            return float(self.price * quantity)
+            return self.price * quantity
         else:
-            raise ValueError(f"Sorry, there is not enough in stock. There are only {quantity_in_stock} available.")
-
-'''
-# Example usage:
-bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
-mac = Product("MacBook Air M2", price=1450, quantity=100)
-
-print(bose.buy(50))
-print(mac.buy(100))
-print(mac.is_active())
-
-bose.show()
-mac.show()
-
-bose.set_quantity(1000)
-bose.show()
-'''
+            raise ValueError(
+                f"Insufficient stock. Available: {self.quantity}."
+            )
