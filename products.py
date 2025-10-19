@@ -101,9 +101,9 @@ class Product:
                 self.deactivate()
             return float(self.price * quantity)
         else:
-            raise ValueError("Sorry, there is not enough in stock")
+            raise ValueError(f"Sorry, there is not enough in stock. There are only {quantity_in_stock} available.")
 
-
+'''
 # Example usage:
 bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
 mac = Product("MacBook Air M2", price=1450, quantity=100)
@@ -117,3 +117,4 @@ mac.show()
 
 bose.set_quantity(1000)
 bose.show()
+'''
